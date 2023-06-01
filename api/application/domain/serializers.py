@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .entities import Profile, User
-from ..services import ProfileServices  
+from ..services import ProfileServices, UserServices  
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,11 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = super().create(validated_data)
-        ProfileServices.create_user_profile(user)
+        UserServices.create_user_profile(user)
         return user
 
     def update(self, instance, validated_data):
-        ProfileServices.update_user(instance, **validated_data)
+        UserServices.update_user(instance, **validated_data)
         return instance
 
 class ProfileSerializer(serializers.ModelSerializer):

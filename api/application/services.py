@@ -4,14 +4,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class ProfileServices:
-    
-    @staticmethod
-    def create_user_profile(user):
-        Profile.objects.get_or_create(user=user)
-
-    @staticmethod
-    def save_user_profile(user):
-        user.profile.save()
 
     @staticmethod
     def delete_user(user):
@@ -23,3 +15,12 @@ class ProfileServices:
             setattr(user, attr, value)
         user.save()
         
+class UserServices:
+    
+    @staticmethod
+    def create_user_profile(user):
+        Profile.objects.get_or_create(user=user)
+
+    @staticmethod
+    def save_user_profile(user):
+        user.profile.save()
