@@ -1,3 +1,3 @@
-from django.db import models
+from api.application.domain.entities import Profile
 
-# Create your models here.
+__all__ = ["Profile"]
