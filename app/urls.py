@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.documentation import include_docs_urls
+from rest_framework_swagger.views import get_swagger_view
+
 
 urlpatterns = [
     path("api/", include("api.urls", namespace="api")),
     path("admin/", admin.site.urls),
     path('docs/', include_docs_urls(title='Login API CRUD')),
+    path('swagger/', get_swagger_view(title='API')),
 ]

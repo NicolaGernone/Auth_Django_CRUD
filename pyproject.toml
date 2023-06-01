@@ -12,6 +12,8 @@ psycopg2-binary = "^2.9.4"
 black = "^23.3.0"
 factory-boy = "^3.2.1"
 django-model-utils = "^4.3.1"
+django-rest-swagger = "^2.2.0"
+drf-yasg = "^1.21.5"
 
 [tool.poetry.dev-dependencies]
 coverage = "^6.3.1"

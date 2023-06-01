@@ -38,3 +38,6 @@ coverage: build migrate
 	docker compose run --rm api coverage run --source='api' --omit='api/tests/*' manage.py test
 	docker compose run --rm api coverage report
 	docker compose run --rm api coverage xml
+
+swagger:
+	docker compose run --rm api python manage.py generate_swagger -f yaml -o api.spec.yaml
