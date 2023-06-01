@@ -1,10 +1,9 @@
 from .domain.entities import Profile
 from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class ProfileServices:
-    
-    User = get_user_model()
     
     @staticmethod
     def create_user_profile(user):
