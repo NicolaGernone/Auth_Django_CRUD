@@ -16,9 +16,6 @@ show:
 makemigrations:
 	docker compose run --rm api python manage.py makemigrations api
 
-db_country_list:
-	docker compose run --rm api python manage.py create_vote_list
-
 static:
 	docker compose run --rm api python manage.py collectstatic --noinput --clear --no-post-process
 
