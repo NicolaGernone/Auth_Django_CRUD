@@ -7,7 +7,7 @@ authors = ["Nicola Gernone"]
 [tool.poetry.dependencies]
 python = "^3.9"
 Django = "^4.1"
-djangorestframework = "^3.13.1"
+djangorestframework = "3.14"
 psycopg2-binary = "^2.9.4"
 black = "^23.3.0"
 factory-boy = "^3.2.1"

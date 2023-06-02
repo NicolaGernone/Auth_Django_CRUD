@@ -40,4 +40,4 @@ coverage: build migrate
 	docker compose run --rm api coverage xml
 
 swagger:
-	docker compose run --rm api python manage.py generate_swagger -f yaml -o api.spec.yaml
+	docker compose run --rm api python manage.py generateschema -f yaml -o api.spec.yaml
