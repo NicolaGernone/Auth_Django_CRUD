@@ -39,7 +39,10 @@ coverage: build migrate
 	docker compose run --rm api coverage report
 	docker compose run --rm api coverage xml
 
-swagger:
-	docker compose run --rm api python manage.py generateschema -f yaml -o api.spec.yaml
+# Start the project with social auth
+start: build makemigrations migrate user socialapp
+	docker compose up -d
 
-start: build makemigrations migrate user
+# Social Auth you need a Client ID and Secret from the provider
+socialapp:
+	docker compose run --rm api python manage.py createsocialapp

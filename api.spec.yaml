@@ -12,13 +12,20 @@ consumes:
 produces:
   - application/json
 securityDefinitions:
-  Basic:
-    type: basic
+  OAuth2:
+    type: oauth2
+    flow: password
+    tokenUrl: 'http://127.0.0.1:5050:5050//accounts/github/login/'
+    scopes:
+      read: Grants read access
+      write: Grants write access
 security:
-  - Basic: []
+  - OAuth2:
+    - read
+    - write
 paths:
   /accounts/github/login/:
-    post:
+    get:
       operationId: accounts_github_login_create
       description: 'endpoint to authenticat with github '
       parameters: []
