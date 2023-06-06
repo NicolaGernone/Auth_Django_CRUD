@@ -1,0 +1,190 @@
+swagger: '2.0'
+info:
+  title: Auth CRUD API
+  description: API to login and register users
+  version: v1
+host: 127.0.0.1:5050
+schemes:
+  - http
+basePath: ''
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    flow: password
+    tokenUrl: 'http://127.0.0.1:5050:5050//accounts/github/login/'
+    scopes:
+      read: Grants read access
+      write: Grants write access
+security:
+  - OAuth2:
+    - read
+    - write
+paths:
+  /accounts/github/login/:
+    get:
+      operationId: accounts_github_login_create
+      description: 'endpoint to authenticat with github '
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - accounts
+    parameters: []
+  /api-token-auth/:
+    post:
+      operationId: api-token-auth_create
+      description: useed to retrive token for user
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AuthToken'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/AuthToken'
+      tags:
+        - api-token-auth
+    parameters: []
+  /api/usersprofiles/:
+    get:
+      operationId: api_usersprofiles_list
+      description: List users presents in the application if user is superuser or staff
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+      tags:
+        - api
+    post:
+      operationId: api_usersprofiles_create
+      description: the logged in user can create new user
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - api
+    parameters: []
+  /api/usersprofiles/{id}/:
+    get:
+      operationId: api_usersprofiles_read
+      description: retrieve user details
+      parameters: []
+      responses:
+        '200':
+          description: returns user details
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - api
+    put:
+      operationId: api_usersprofiles_update
+      description: allow user to update his details or another user if he is superuser with full data
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: returns user details
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - api
+    patch:
+      operationId: api_usersprofiles_partial_update
+      description: allow user to update his details or another user if he is superuser with partial data
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: returns user details
+          schema:
+            $ref: '#/definitions/User'
+      tags:
+        - api
+    delete:
+      operationId: api_usersprofiles_delete
+      description: delete user
+      parameters: []
+      responses:
+        '204':
+          description: returns user details
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this User Profile.
+        required: true
+        type: integer
+definitions:
+  AuthToken:
+    required:
+      - username
+      - password
+    type: object
+    properties:
+      username:
+        title: Username
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        readOnly: true
+        minLength: 1
+  User:
+    required:
+      - username
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      username:
+        title: Username
+        description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+          only.
+        type: string
+        pattern: ^[\w.@+-]+$
+        maxLength: 150
+        minLength: 1
+      email:
+        title: Email address
+        type: string
+        format: email
+        maxLength: 254
+      is_superuser:
+        title: Is superuser
+        type: boolean
