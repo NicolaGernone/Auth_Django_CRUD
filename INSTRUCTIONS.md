@@ -9,9 +9,9 @@
 ```bash
 make start
 ```
- - Here you need to create a super user to access to the admin panel.
+ - Here you need to create a super user to access to the admin panel following the instruction.
 
- ## Register another app in github (optional)
+## Register another app in github (optional)
 
 - To register the app in github you need to add to dev.env the Client ID and the Secret Key of your new app and change the name.
 - After this you can run the command to register the app in github:
@@ -20,6 +20,7 @@ make start
 make socialapp
 ```
 
+## Run docker after initial setup
 
  - After this step every time you need to run docker use:
 
@@ -33,7 +34,7 @@ make up
 make down
 ```
 
- ## Login with github
+## Login with github
   
  - Calling this endpoint you can login with github:
 
@@ -60,7 +61,7 @@ http://127.0.0.1:5050/redoc/
 
 ## YAML file
 
-- The api.spec.yaml provide all the instruction about the api.
+- The [api.spec.yaml](./api.spec.yaml) provide all the instruction about the api.
 - You can use it to import the api in postman or other software.
 
 ## Every thing is made to avoid to use directly the admin pannel, if you need it you have to access with a superuser to be able to see all the models inside.
