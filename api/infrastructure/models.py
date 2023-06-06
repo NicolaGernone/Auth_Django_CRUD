@@ -1,3 +1,3 @@
-from api.application.domain.entities import Profile
+from api.application.domain.entities import CustomUser
 
-__all__ = ["Profile"]
+__all__ = ["CustomUser"]

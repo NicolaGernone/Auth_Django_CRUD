@@ -1,19 +1,20 @@
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from .models import Profile
-from django.contrib.auth.models import User
-from api.application.domain.serializers import ProfileSerializer, UserSerializer
+from rest_framework import viewsets, permissions, authentication
+from .models import CustomUser
+from api.application.domain.serializers import UserSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    """
+    A viewset that provides the standard actions for the User model.
     
+    In addition to the standard `list()`, `create()`, `retrieve()`, `update()`, and `destroy()` actions,
+    this viewset also provides `get()` and `set()` for individual instances of the User model.
 
-class ProfileViewSet(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+    Attributes
+    ----------
+    queryset : QuerySet
+        The set of all CustomUser instances.
+    serializer_class : Serializer
+        The serializer class used for validating and deserializing input, and for serializing output.
+    """
+    queryset = CustomUser.objects.all()
+    serializer_class = UserSerializer

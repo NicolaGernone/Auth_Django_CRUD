@@ -15,10 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -27,13 +29,16 @@ schema_view = get_schema_view(
       description="API to login and register users",
    ),
    public=True,
-   permission_classes=(permissions.AllowAny,),
+   permission_classes=(permissions.IsAuthenticated,),
 )
 
 
 urlpatterns = [
     path("api/", include("api.urls", namespace="api")),
     path("admin/", admin.site.urls),
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('accounts/', include('allauth.urls'), name='socialaccount_signup'),
 ]
