@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, authentication
+from rest_framework import viewsets
 from .models import CustomUser
 from api.application.domain.serializers import UserSerializer
 

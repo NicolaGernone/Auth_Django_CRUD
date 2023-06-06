@@ -4,7 +4,7 @@ build:
 down:
 	docker compose down
 
-up: build makemigrations migrate
+up: build migrate
 	docker compose up -d
 
 migrate:
@@ -41,3 +41,5 @@ coverage: build migrate
 
 swagger:
 	docker compose run --rm api python manage.py generateschema -f yaml -o api.spec.yaml
+
+start: build makemigrations migrate user

@@ -6,7 +6,7 @@ info:
 host: 127.0.0.1:5050
 schemes:
   - http
-basePath: /api/usersprofiles
+basePath: ''
 consumes:
   - application/json
 produces:
@@ -17,6 +17,17 @@ securityDefinitions:
 security:
   - Basic: []
 paths:
+  /accounts/github/login/:
+    post:
+      operationId: accounts_github_login_create
+      description: 'endpoint to authenticat with github '
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - accounts
+    parameters: []
   /api-token-auth/:
     post:
       operationId: api-token-auth_create
