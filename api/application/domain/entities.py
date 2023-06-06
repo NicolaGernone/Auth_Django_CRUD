@@ -35,5 +35,6 @@ class CustomUser(AbstractUser):
             verbose_name: A human-readable name for the object, singular.
             verbose_name_plural: The plural name for the object.
         """
-        verbose_name = 'User Profile'
-        verbose_name_plural = 'User Profiles'
+
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"

@@ -1,52 +1,104 @@
-from rest_framework.test import APIClient, APITestCase
+from unittest.mock import patch
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
+from faker import Faker
 from rest_framework.test import APIClient
+from api.application.domain.serializers import UserSerializer
 from tests.application.domain.factories import UserFactory
 from rest_framework import status
+from django.contrib.auth import get_user_model
 
-class UserViewSetTest(APITestCase):
+
+class UserViewSetTestCase(TestCase):
     def setUp(self):
-        self.user = UserFactory()
         self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
-        self.user2 = UserFactory(username='user2')
-        self.user_url = reverse('user-detail', kwargs={'pk': self.user2.pk})
+        self.user = UserFactory()
+        self.faker = Faker()
 
-    def test_retrieve_user(self):
-        response = self.client.get(self.user_url)
+    @patch("allauth.account.auth_backends.AuthenticationBackend.authenticate")
+    def test_retrieve_user(self, mock_authenticate):
+        user = UserFactory()
+        self.client.force_authenticate(user=user)
+        response = self.client.get(
+            reverse("api:usersprofiles-detail", kwargs={"pk": self.user.pk})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, UserSerializer(self.user).data)
+
+    @patch("allauth.account.auth_backends.AuthenticationBackend.authenticate")
+    def test_retrieve_user_not_found(self, mock_authenticate):
+        user = UserFactory()
+        non_existing_user_id = 99999  # This ID should not exist
+        self.client.force_authenticate(user=user)
+        response = self.client.get(
+            reverse("api:usersprofiles-detail", kwargs={"pk": non_existing_user_id})
+        )
+        self.assertEqual(response.status_code, 404)
+
+    @patch("allauth.account.auth_backends.AuthenticationBackend.authenticate")
+    def test_list_users(self, mock_authenticate):
+        # Mock the authentication
+        user = UserFactory()
+        self.client.force_authenticate(user=user)
+
+        response = self.client.get(reverse("api:usersprofiles-list"))
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['username'], 'user2')
+        self.assertEqual(len(response.data), 2)
 
-    def test_update_user(self):
-        data = {'username': 'new_username'}
-        response = self.client.patch(self.user_url, data, format='json')
+    @patch("allauth.account.auth_backends.AuthenticationBackend.authenticate")
+    def test_create_user(self, mock_authenticate):
+        # Mock the authentication
+        user = UserFactory(is_staff=True)
+        self.client.force_authenticate(user=user)
+
+        new_user_data = {
+            "username": self.faker.user_name(),
+            "email": self.faker.email(),
+            "password": self.faker.password(),
+            "is_staff": True,
+            "is_superuser": False,
+            "is_active": True,
+        }
+
+        response = self.client.post(reverse("api:usersprofiles-list"), new_user_data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(get_user_model().objects.count(), 3)
+        self.assertEqual(
+            get_user_model().objects.latest("id").username, new_user_data["username"]
+        )
+
+    @patch("allauth.account.auth_backends.AuthenticationBackend.authenticate")
+    def test_update_user(self, mock_authenticate):
+        # Mock the authentication
+        user = UserFactory(is_staff=True)
+        self.client.force_authenticate(user=user)
+        user_to_update = UserFactory(is_staff=False)
+
+        updated_user_data = {
+            "is_staff": True,
+        }
+
+        response = self.client.patch(
+            reverse("api:usersprofiles-detail", kwargs={"pk": user_to_update.pk}),
+            updated_user_data,
+        )
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['username'], 'new_username')
+        user.refresh_from_db()
+        self.assertEqual(user.is_staff, updated_user_data["is_staff"])
 
-    def test_delete_user(self):
-        response = self.client.delete(self.user_url)
+    @patch("allauth.account.auth_backends.AuthenticationBackend.authenticate")
+    def test_destroy_user(self, mock_authenticate):
+        # Mock the authentication
+        user = UserFactory(is_staff=True)
+        user_to_delete = UserFactory()
+        self.client.force_authenticate(user=user)
+
+        response = self.client.delete(
+            reverse("api:usersprofiles-detail", kwargs={"pk": user_to_delete.pk})
+        )
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-class ProfileViewSetTest(APITestCase):
-    def setUp(self):
-        self.user = UserFactory()
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.user)
-
-    def test_retrieve_profile(self):
-        url = reverse('profile-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-    def test_update_profile(self):
-        url = reverse('profile-list')
-        data = {'name': 'new_name'}
-        response = self.client.patch(url, data, format='json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data['name'], 'new_name')
-
-    def test_delete_profile(self):
-        url = reverse('profile-detail', kwargs={'pk': self.user.profile.pk})
-        response = self.client.delete(url)
-        self.assertEqual(response.status_code, 204)
-
+        self.assertEqual(get_user_model().objects.count(), 2)
