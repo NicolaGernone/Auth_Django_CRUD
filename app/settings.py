@@ -146,10 +146,10 @@ AUTHENTICATION_BACKENDS = ("allauth.account.auth_backends.AuthenticationBackend"
 
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
-LOGIN_REDIRECT_URL = "/swagger/"
-LOGOUT_REDIRECT_URL = "/accounts/github/login"
+LOGIN_REDIRECT_URL = os.environ.get("LOGIN_REDIRECT_URL")
+LOGOUT_REDIRECT_URL = os.environ.get("LOGOUT_REDIRECT_URL")
 ACCOUNT_LOGOUT_ON_GET = False
-ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/github/login/"
+ACCOUNT_LOGOUT_REDIRECT_URL = os.environ.get("LOGOUT_REDIRECT_URL")
 
 
 # Static files (CSS, JavaScript, Images)
