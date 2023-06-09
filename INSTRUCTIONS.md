@@ -39,7 +39,7 @@ make down
  - Calling this endpoint you can login with github:
 
 ```bash
-http://127.0.0.1:5050/account/github/login/
+http://127.0.0.1:5050/accounts/github/login/
 ```
 - After the loging you will automatically redirect to the swagger page.
 
