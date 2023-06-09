@@ -1,9 +1,10 @@
 # File: myapp/management/commands/createsocialapp.py
 
 import os
-from django.core.management.base import BaseCommand
+
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
+from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):

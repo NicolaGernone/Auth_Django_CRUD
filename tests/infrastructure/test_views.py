@@ -1,12 +1,14 @@
 from unittest.mock import patch
-from django.test import RequestFactory, TestCase
+
+from django.contrib.auth import get_user_model
+from django.test import TestCase
 from django.urls import reverse
 from faker import Faker
+from rest_framework import status
 from rest_framework.test import APIClient
+
 from api.application.domain.serializers import UserSerializer
 from tests.application.domain.factories import UserFactory
-from rest_framework import status
-from django.contrib.auth import get_user_model
 
 
 class UserViewSetTestCase(TestCase):
